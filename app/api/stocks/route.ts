@@ -3,6 +3,8 @@ import YahooFinance from "yahoo-finance2";
 import { TICKERS } from "@/lib/consts";
 import { StockData } from "@/types";
 
+export const runtime = 'edge';
+
 const yahooFinance = new YahooFinance();
 
 // Simple in-memory cache to avoid hitting rate limits too hard during dev
