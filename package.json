@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "if [ \"$NEXT_ON_PAGES_RECURSION\" != \"1\" ]; then export NEXT_ON_PAGES_RECURSION=1 && npx @cloudflare/next-on-pages; else next build; fi",
     "worker:build": "npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "eslint"
