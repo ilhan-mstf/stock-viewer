@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Software Meltdown Dashboard
 
-## Getting Started
+A real-time stock dashboard tracking the "Software Meltdown" of 2024/2025. This application monitors ~80 major SaaS/Cloud tickers, providing quantitative metrics like Year-to-Date (YTD) performance, Simple Moving Averages (SMA), and Relative Strength (RS) Ranks.
 
-First, run the development server:
+## Features
+
+*   **Real-time Data**: Fetches stock quotes via `yahoo-finance2`.
+*   **Quantitative Metrics**:
+    *   **YTD %**: Calculated from Jan 1st of the current year.
+    *   **SMA Indicators**: 20, 50, and 200-day Simple Moving Averages with Bull/Bear trend indicators.
+    *   **RS Rank**: 1-99 Cohort ranking based on 1-year performance.
+    *   **Sparklines**: 1-year price trend visualization.
+*   **Theme Support**: Fully responsive Light and Dark modes.
+*   **Accessible UI**: High-contrast heatmaps and accessible table structures.
+
+## Tech Stack
+
+*   **Framework**: Next.js 16 (App Router)
+*   **Styling**: Tailwind CSS v4
+*   **Charts**: Recharts (Sparklines)
+*   **Deployment**: Cloudflare Pages (via OpenNext)
+
+## Local Development
+
+1.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+2.  Run development server:
+    ```bash
+    npm run dev
+    ```
+
+## Deployment (Cloudflare)
+
+This project uses **OpenNext** (`@opennextjs/cloudflare`) to deploy Next.js on Cloudflare Workers.
+
+### 1. Build Command
+The build process is decoupled to prevent recursion loops on Cloudflare CI:
+
+*   **Cloudflare Build Command**: `npm run cf:build`
+*   **Build Output Directory**: `.open-next/assets` (Configured in `wrangler.jsonc`)
+
+### 2. Manual Deployment
+To deploy manually from your terminal:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run deploy
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Architecture Notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*   **API Runtime**: The API uses the standard Node.js runtime (not Edge Runtime). OpenNext automatically wraps this for Cloudflare compatibility using the `nodejs_compat` v2 flag (Compatibility Date: 2024-09-23+).
+*   **Caching**: In-memory caching (60s) is implemented to respect Yahoo Finance rate limits.
